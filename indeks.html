@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tebak Gambar 5 Level - 50 Soal</title>
+<style>
+:root{--h:#16a34a;--k:#facc15;--bg:#f0fdf4}
+body{margin:0;font-family:Inter,'Segoe UI',sans-serif;background:var(--bg);display:flex;justify-content:center;padding:12px}
+.card{width:100%;max-width:560px;background:#fff;border-radius:24px;border:4px solid #bbf7d0;box-shadow:0 14px 36px rgba(0,0,0,.12);overflow:hidden}
+.top{background:linear-gradient(135deg,#22c55e,#15803d);color:#fff;padding:18px;text-align:center}
+.levels{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.lvl{padding:6px 10px;border-radius:99px;background:rgba(255,255,255,.2);font-size:12px;font-weight:700;cursor:pointer;border:2px solid transparent}
+.lvl.active{background:#facc15;color:#422006;border-color:#fff}
+.lvl.done{background:#fff;color:#16a34a}
+.content{padding:18px}
+.box{background:#f8fafc;border:3px dashed var(--h);border-radius:18px;min-height:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px;text-align:center}
+.emoji{font-size:58px}.clue{margin-top:8px;font-size:16px}
+.hint{margin-top:10px;background:#fef9c3;border-left:5px solid var(--k);padding:9px 11px;border-radius:8px;font-size:13px;display:none}
+input{width:100%;padding:14px;border:2px solid #86efac;border-radius:12px;font-size:17px;box-sizing:border-box;margin-top:12px;outline:none}
+.btn{width:100%;padding:13px;border:none;border-radius:12px;font-weight:800;font-size:16px;cursor:pointer;margin-top:10px}
+.btn-h{background:var(--h);color:#fff}.btn-b{background:#38bdf8;color:#fff}.btn-k{background:#fff;border:2px solid var(--k)}
+.feedback{margin-top:10px;padding:10px;border-radius:10px;text-align:center;font-weight:700;display:none}
+.benar{background:#dcfce7;color:#14532d}.salah{background:#fee2e2;color:#7f1d1d}
+.progress{height:9px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin:10px 0}.pbar{height:100%;background:var(--k);width:0%;transition:.4s}
+.footer{display:flex;justify-content:space-between;font-size:13px;margin-top:8px}
+.badge{background:#dcfce7;color:#166534;padding:4px 10px;border-radius:99px;font-weight:700}
+</style>
+</head>
+<body>
+<div class="card">
+<div class="top">
+<h1 style="margin:0">🎯 TEBAK GAMBAR 5 LEVEL</h1>
+<p style="margin:4px 0 0;font-size:13px">50 Soal • Tema Ketahanan Pangan & Iklim</p>
+<div class="levels" id="levelNav"></div>
+</div>
+<div class="content">
+<div class="progress"><div class="pbar" id="pbar"></div></div>
+<div class="box"><span class="emoji" id="emoji"></span><div class="clue" id="clue"></div></div>
+<div class="hint" id="hint"></div>
+<input id="inp" placeholder="Ketik jawaban...">
+<div class="feedback" id="fb"></div>
+<button class="btn btn-h" id="btnCek">CEK JAWABAN</button>
+<button class="btn btn-b" id="btnNext" style="display:none">LANJUT ➡️</button>
+<div style="display:flex;gap:8px"><button class="btn btn-k" id="btnHint" style="flex:1">💡 Petunjuk (-5 poin)</button><button class="btn btn-k" id="btnSkip" style="flex:1">⏭️ Lewati</button></div>
+<div class="footer"><span>Level <b id="lvTxt">1</b> • Soal <b id="noTxt">1</b>/10</span><span class="badge">Skor: <b id="skorTxt">0</b></span></div>
+<div style="margin-top:12px;background:#f0fdf4;border-radius:12px;padding:10px;font-size:12px" id="kunciBox"></div>
+</div>
+</div>
+<script>
+const LEVELS = [
+{nama:"Lv1 Dasar", soal:[
+{emoji:"🌾☀️🥵",clue:"Tanah sawah retak karena panas",jawab:["kekeringan"],hint:"K..."},
+{emoji:"🌧️🌾💦",clue:"Sawah kebanjiran",jawab:["banjir"],hint:"B..."},
+{emoji:"🌞🌡️⬆️",clue:"Suhu bumi naik",jawab:["pemanasan global","suhu naik","global warming"],hint:"Pemanasan..."},
+{emoji:"🍚❌👨‍🌾",clue:"Tidak ada beras dipanen",jawab:["gagal panen"],hint:"Gagal..."},
+{emoji:"💧🌾",clue:"Sawah butuh air",jawab:["irigasi","air","pengairan"],hint:"I..."},
+{emoji:"🌳🌲",clue:"Banyak pohon",jawab:["hutan","jaga hutan"],hint:"H..."},
+{emoji:"🚜🌾",clue:"Alat bantu petani",jawab:["traktor","mesin pertanian"],hint:"T..."},
+{emoji:"🌧️☀️🌪️",clue:"Cuaca tidak menentu",jawab:["cuaca ekstrem","iklim ekstrem"],hint:"Cuaca..."},
+{emoji:"🍽️❓",clue:"Kekurangan makanan",jawab:["krisis pangan","kelaparan","rawan pangan"],hint:"Krisis..."},
+{emoji:"🌱🌿",clue:"Bibit baru tumbuh",jawab:["benih","bibit","tanam"],hint:"B..."}
+]},
+{nama:"Lv2 Ekonomi", soal:[
+{emoji:"📈💰🍚",clue:"Beras jadi mahal",jawab:["harga naik","harga pangan naik","inflasi pangan"],hint:"Harga..."},
+{emoji:"👨‍🌾😭💸",clue:"Petani merugi",jawab:["petani rugi","rugi"],hint:"Rugi..."},
+{emoji:"🚚🍚🏙️",clue:"Beras dikirim ke kota",jawab:["distribusi pangan","pasokan","distribusi"],hint:"Distribusi..."},
+{emoji:"🏪🍚❌",clue:"Toko kehabisan beras",jawab:["stok habis","kelangkaan","langka"],hint:"Langka..."},
+{emoji:"💵⬇️🌾",clue:"Pendapatan petani turun",jawab:["pendapatan turun","ekonomi petani"],hint:"Pendapatan..."},
+{emoji:"🛒💲⬆️",clue:"Belanja jadi boros",jawab:["harga naik","mahal"],hint:"Mahal..."},
+{emoji:"📦🍚",clue:"Simpan cadangan beras",jawab:["lumbung pangan","cadangan pangan","stok pangan"],hint:"Lumbung..."},
+{emoji:"🌍🤝🍚",clue:"Bantuan pangan dunia",jawab:["bantuan pangan","impor pangan"],hint:"Impor..."},
+{emoji:"👩‍👧‍👦🍚",clue:"Keluarga butuh makan",jawab:["ketahanan pangan","kebutuhan pangan"],hint:"Ketahanan..."},
+{emoji:"📊🌾",clue:"Data hasil panen",jawab:["produksi pangan","hasil panen"],hint:"Produksi..."}
+]},
+{nama:"Lv3 Adaptasi", soal:[
+{emoji:"💧✅🌱",clue:"Pakai air sedikit",jawab:["hemat air","irit air"],hint:"Hemat..."},
+{emoji:"🌱🛡️☀️",clue:"Padi kuat panas",jawab:["varietas tahan kekeringan","tahan kekeringan"],hint:"Varietas..."},
+{emoji:"💧💧🌾➡️💧",clue:"Air menetes ke akar",jawab:["irigasi tetes","tetes"],hint:"Irigasi..."},
+{emoji:"🌳❤️💧",clue:"Hutan simpan air",jawab:["reboisasi","jaga hutan","tanam pohon"],hint:"Reboisasi..."},
+{emoji:"🔄🌾🐄",clue:"Padi dan ternak bersama",jawab:["tumpang sari","agroforestri"],hint:"Tumpang..."},
+{emoji:"🏜️🌵🌾",clue:"Tanam di lahan kering",jawab:["lahan kering","dry farming"],hint:"Lahan..."},
+{emoji:"🌧️📦💧",clue:"Kumpulkan air hujan",jawab:["panen air hujan","embung"],hint:"Panen air..."},
+{emoji:"🧪🌱",clue:"Benih unggul lab",jawab:["benih unggul","bioteknologi"],hint:"Benih..."},
+{emoji:"📅🌾☀️🌧️",clue:"Atur waktu tanam",jawab:["kalender tanam","jadwal tanam"],hint:"Kalender..."},
+{emoji:"🛰️🌾📡",clue:"Pantau sawah dari satelit",jawab:["pertanian presisi","smart farming"],hint:"Presisi..."}
+]},
+{nama:"Lv4 Aksi", soal:[
+{emoji:"🚲🌍💨",clue:"Naik sepeda kurangi polusi",jawab:["kurangi emisi","naik sepeda"],hint:"Emisi..."},
+{emoji:"♻️🗑️🌱",clue:"Pilah sampah jadi kompos",jawab:["kompos","daur ulang"],hint:"Kompos..."},
+{emoji:"💡🔌❌",clue:"Matikan lampu hemat",jawab:["hemat energi","hemat listrik"],hint:"Hemat..."},
+{emoji:"🥗🌱🍚",clue:"Makan sayur lokal",jawab:["pangan lokal","diversifikasi pangan"],hint:"Lokal..."},
+{emoji:"🚶‍♂️🌳",clue:"Jalan kaki tanam pohon",jawab:["tanam pohon","go green"],hint:"Tanam..."},
+{emoji:"🥤❌🌊",clue:"Tolak plastik sekali pakai",jawab:["kurangi plastik","bebas plastik"],hint:"Plastik..."},
+{emoji:"☀️🔋🏠",clue:"Listrik dari matahari",jawab:["energi surya","panel surya"],hint:"Surya..."},
+{emoji:"📚👧🌾",clue:"Edukasi petani muda",jawab:["edukasi pangan","penyuluhan"],hint:"Edukasi..."},
+{emoji:"🤝👨‍🌾👩‍🌾",clue:"Gotong royong panen",jawab:["gotong royong","kelompok tani"],hint:"Gotong..."},
+{emoji:"📱🌾💧",clue:"Aplikasi info cuaca tani",jawab:["info iklim","aplikasi pertanian"],hint:"Aplikasi..."}
+]},
+{nama:"Lv5 Bos", soal:[
+{emoji:"🌡️⬆️🌾⬇️🍚⬇️",clue:"Panas naik, panen & pangan turun",jawab:["dampak perubahan iklim","krisis iklim"],hint:"Perubahan iklim..."},
+{emoji:"🌊🧂🌾❌",clue:"Air laut masuk sawah",jawab:["intrusi air laut","salinitas"],hint:"Intrusi..."},
+{emoji:"🦗🌾😱",clue:"Hama menyerang padi karena panas",jawab:["hama wereng","ledakan hama"],hint:"Hama..."},
+{emoji:"🏜️➡️🏚️➡️🏙️",clue:"Lahan kering warga pindah kota",jawab:["urbanisasi","migrasi iklim"],hint:"Urbanisasi..."},
+{emoji:"🍚🥔🌽🍠",clue:"Jangan hanya beras",jawab:["diversifikasi pangan"],hint:"Diversifikasi..."},
+{emoji:"🔬🌾🧬💪",clue:"Padi hasil edit gen tahan banjir",jawab:["padi transgenik","rekayasa genetik"],hint:"Transgenik..."},
+{emoji:"🌾🔥➡️💨➡️🌧️❌",clue:"Bakar jerami polusi",jawab:["polusi udara","emisi karbon"],hint:"Polusi..."},
+{emoji:"🤖🚜🌾",clue:"Traktor tanpa sopir",jawab:["pertanian modern","robot tani"],hint:"Modern..."},
+{emoji:"📜🌏🤝 2015",clue:"Perjanjian iklim dunia Paris",jawab:["perjanjian paris","paris agreement"],hint:"Paris..."},
+{emoji:"🎯🌾 2030 ❌ lapar",clue:"Target dunia tanpa kelaparan",jawab:["sdgs zero hunger","tanpa kelaparan"],hint:"SDG 2..."}
+]}
+];
+let curLv=0,curQ=0,skor=0;
+let answered=JSON.parse(localStorage.getItem('ans5')||'{}');
+const nav=document.getElementById('levelNav'),emojiEl=document.getElementById('emoji'),clueEl=document.getElementById('clue'),inp=document.getElementById('inp'),fb=document.getElementById('fb'),hintEl=document.getElementById('hint'),pbar=document.getElementById('pbar');
+function renderNav(){nav.innerHTML='';LEVELS.forEach((lv,i)=>{let b=document.createElement('div');b.className='lvl'+(i===curLv?' active':'')+(answered[i]?' done':'');b.textContent=lv.nama+(answered[i]?` ✓`:'');b.onclick=()=>{curLv=i;curQ=0;load();renderNav();};nav.appendChild(b);});}
+function load(){let s=LEVELS[curLv].soal[curQ];emojiEl.textContent=s.emoji;clueEl.textContent=s.clue;hintEl.textContent='Petunjuk: '+s.hint;hintEl.style.display='none';fb.style.display='none';inp.value='';document.getElementById('btnCek').style.display='block';document.getElementById('btnNext').style.display='none';document.getElementById('lvTxt').textContent=curLv+1;document.getElementById('noTxt').textContent=curQ+1;pbar.style.width=(curQ/10*100)+'%';document.getElementById('kunciBox').innerHTML='Kunci Lv '+(curLv+1)+': '+LEVELS[curLv].soal.map(x=>x.jawab[0]).join(', ');}
+function cek(){let j=inp.value.toLowerCase().trim();if(!j){fb.textContent='Isi dulu lur!';fb.className='feedback salah';fb.style.display='block';return;}let s=LEVELS[curLv].soal[curQ];let ok=s.jawab.some(k=>j.includes(k));if(ok){skor+=hintEl.style.display==='block'?5:10;document.getElementById('skorTxt').textContent=skor;fb.textContent='✅ BENAR! +'+(hintEl.style.display==='block'?5:10);fb.className='feedback benar';fb.style.display='block';document.getElementById('btnCek').style.display='none';document.getElementById('btnNext').style.display='block';pbar.style.width=((curQ+1)/10*100)+'%';if(curQ===9)document.getElementById('btnNext').textContent='SELESAI LEVEL ➡️';}else{fb.textContent='❌ Salah, coba lagi!';fb.className='feedback salah';fb.style.display='block';}}
+function nextQ(){if(curQ<9){curQ++;load();}else{answered[curLv]={skor:skor};localStorage.setItem('ans5',JSON.stringify(answered));if(curLv<4){curLv++;curQ=0;renderNav();load();alert('Level '+(curLv)+' selesai! Lanjut Level '+(curLv+1));}else{alert('TAMAT! Skor total '+skor+' dari 500. Keren lur!');renderNav();}}}
+document.getElementById('btnCek').onclick=cek;document.getElementById('btnNext').onclick=nextQ;
+document.getElementById('btnHint').onclick=()=>{hintEl.style.display='block';};
+document.getElementById('btnSkip').onclick=()=>{curQ=(curQ+1)%10;load();};
+inp.addEventListener('keydown',e=>{if(e.key==='Enter') cek();});
+renderNav();load();
+</script>
+</body>
+</html>
